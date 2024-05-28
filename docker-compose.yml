@@ -1,0 +1,30 @@
+version: '3'
+
+networks:
+  my-network:
+
+services:
+  postgres:
+    image: bitnami/postgresql:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: mydb
+    volumes:
+      - ./postgres:/bitnami/postgresql
+    networks:
+        - my-network
+  
+  node:
+    build:
+      context: .
+      dockerfile: node.dockerfile
+    container_name: node
+    volumes:
+      - ./src:/usr/src/app
+    ports:
+      - "3000:3000"
+    networks:
+      - my-network
